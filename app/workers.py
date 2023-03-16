@@ -6,5 +6,6 @@ class Worker:
 
     def __call__(self):
         self.count += 1
+        result = f"Job {self.count} done!"
         time.sleep(10)
-        print(f"Job {self.count} done!")
+        print(result)
