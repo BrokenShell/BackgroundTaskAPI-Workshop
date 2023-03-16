@@ -1,7 +1,7 @@
 from fastapi import FastAPI, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.workers import Worker
+from app.workers import Worker, Agent, Job
 
 with open("README.md", "r") as file:
     next(file)
@@ -9,7 +9,7 @@ with open("README.md", "r") as file:
 
 API = FastAPI(
     title="BackgroundTask API",
-    version="0.0.1",
+    version="0.0.2",
     docs_url="/",
     description=description,
 )
@@ -25,5 +25,10 @@ API.add_middleware(
 
 @API.get("/work", tags=["Work Ops"])
 async def work(queue: BackgroundTasks):
-    queue.add_task(API.worker)
+    agent = Agent([
+        Job(print, "hello, world"),
+        Job(print, "hello, world"),
+        Job(print, "hello, world"),
+    ])
+    queue.add_task(agent)
     return "Job queued."
